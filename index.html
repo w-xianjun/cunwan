@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王白眉村百年百人</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+        
+        /* 直播容器 */
+        .live-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 春节背景 */
+        .new-year-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(to bottom, #8b0000, #b22222, #8b0000),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="20" font-family="Microsoft YaHei" font-size="15" fill="gold">福</text></svg>');
+            background-size: 100% 100%, 5% 5%;
+            z-index: 1;
+        }
+        
+        /* 灯笼装饰 */
+        .lantern {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            background: radial-gradient(ellipse at center, #ff0000, #8b0000);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px #ff0000,
+                inset 0 0 5px gold;
+            z-index: 5;
+            animation: swing 3s infinite alternate;
+        }
+        
+        .lantern::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 17px;
+            width: 6px;
+            height: 8px;
+            background: gold;
+            border-radius: 3px;
+        }
+        
+        .lantern::after {
+            content: '春';
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            color: gold;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        
+        /* 烟花特效 */
+        .firework {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 5px 1px rgba(255,100,0,0.8),
+                0 0 10px 2px rgba(255,200,0,0.5);
+            animation: explode 2s ease-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes explode {
+            0% { 
+                transform: translate(0, 0) scale(0.1); 
+                opacity: 0; 
+            }
+            50% { 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translate(var(--tx), var(--ty)) scale(1); 
+                opacity: 0; 
+            }
+        }
+        
+        /* 飘落的红包 */
+        .red-packet {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ff0000, #8b0000);
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(255,0,0,0.5);
+            z-index: 4;
+            animation: fall linear infinite;
+        }
+        
+        .red-packet::before {
+            content: '福';
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            color: gold;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        @keyframes fall {
+            0% { 
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 直播区域 */
+        .live-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 标题栏 */
+        .live-header {
+            position: relative;
+            padding: 15px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+            height: 70px;
+        }
+        
+        .live-title {
+            font-size: 2.5rem;
+            color: gold;
+            text-shadow: 0 0 5px #ff0000;
+            font-weight: bold;
+        }
+        
+        .live-status {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* 视频区域 */
+        .video-container {
+            position: relative;
+            overflow: hidden;
+            margin: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid gold;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            height: calc(100% - 90px);
+            flex: 1;
+        }
+        
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+            /* 隐藏控制条 */
+            -webkit-appearance: none;
+        }
+        
+        /* 隐藏视频控制条 */
+        #video::-webkit-media-controls {
+            display: none !important;
+        }
+        
+        #video::-webkit-media-controls-enclosure {
+            display: none !important;
+        }
+        
+        #video::-webkit-media-controls-panel {
+            display: none !important;
+        }
+        
+        /* 视频控制区域 */
+        .video-controls {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 25;
+            padding: 0 20px;
+        }
+        
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid gold;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: gold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 60px;
+        }
+        
+        .control-btn i {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+        }
+        
+        .control-btn:hover, .control-btn:active {
+            background: rgba(255, 0, 0, 0.7);
+            transform: scale(1.05);
+        }
+        
+        /* 观众互动区域 */
+        .audience-interaction {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 15;
+        }
+        
+        .interaction-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid gold;
+            color: gold;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .interaction-btn:hover {
+            background: rgba(255, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+        
+        /* 增大爱心大小 */
+        .heart {
+            position: absolute;
+            font-size: 30px;  /* 从20px增大到30px */
+            color: #ff3366;
+            pointer-events: none;
+            z-index: 100;
+            animation: heartRain 3s linear forwards;
+        }
+        
+        @keyframes heartRain {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* 视频列表 */
+        .video-list {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid gold;
+            border-radius: 10px;
+            padding: 10px;
+            max-width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 15;
+            display: none;
+        }
+        
+        .video-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .video-item:hover {
+            background: rgba(255, 215, 0, 0.4);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 360px) {
+            .live-title {
+                font-size: 1.8rem;
+            }
+            
+            .control-btn {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+                min-width: 50px;
+            }
+            
+            .control-btn i {
+                font-size: 1rem;
+            }
+            
+            .live-header {
+                height: 60px;
+                padding: 10px 15px;
+            }
+            
+            .video-container {
+                height: calc(100% - 80px);
+                margin: 10px 15px;
+            }
+            
+            .interaction-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .video-list {
+                max-width: 150px;
+                max-height: 200px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="live-container">
+        <!-- 背景元素 -->
+        <div class="new-year-bg"></div>
+        
+        <!-- 灯笼装饰 -->
+        <div class="lantern" style="left: 5%; top: 5%;"></div>
+        <div class="lantern" style="right: 5%; top: 5%;"></div>
+        <div class="lantern" style="left: 10%; top: 20%;"></div>
+        <div class="lantern" style="right: 10%; top: 20%;"></div>
+        
+        <!-- 烟花特效 -->
+        <div id="fireworks-container"></div>
+        
+        <!-- 飘落的红包 -->
+        <div id="red-packets-container"></div>
+        
+        <!-- 爱心雨容器 -->
+        <div id="hearts-container"></div>
+        
+        <!-- 视频列表 -->
+        <div class="video-list" id="video-list">
+            <h4>视频列表</h4>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan1.mp4')">片断1</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan2.mp4')">片断2</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan3.mp4')">片断3</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan4.mp4')">片断4</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan5.mp4')">片断5</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan6.mp4')">片断6</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan7.mp4')">片断7</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan8.mp4')">片断8</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan9.mp4')">片断9</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan10.mp4')">片断11</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan11.mp4')">片断12</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan12.mp4')">片断13</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan13.mp4')">片断14</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan14.mp4')">片断15</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan15.mp4')">片断16</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan16.mp4')">片断17</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan17.mp4')">片断18</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan18.mp4')">片断19</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan19.mp4')">片断20</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan20.mp4')">片断21</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan21.mp4')">片断22</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan22.mp4')">片断23</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan23.mp4')">片断24</div>
+            <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan24.mp4')">片断24</div>
+       </div>
+        
+        <!-- 直播区域 -->
+        <div class="live-area">
+            <!-- 标题栏 -->
+            <div class="live-header">
+                <div class="live-title">王白眉村百年百人</div>
+                <div class="live-status">
+                    <div class="live-dot"></div>
+                    <span id="status-text">浏览中</span>
+                </div>
+            </div>
+            
+        <div class="live-area">
+            <!-- 视频区域 -->
+            <div class="video-container">
+                <!-- 移除muted属性以启用声音 -->
+                <video id="video" autoplay loop>
+                    <source src="cunwan1.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放
+                </video>
+                
+                <!-- 视频控制区域 -->
+                <div class="video-controls">
+                    <button class="control-btn" onclick="playVideo()">
+                        <i class="fas fa-play"></i>
+                        <span>播放</span>
+                    </button>
+                    <button class="control-btn" onclick="pauseVideo()">
+                        <i class="fas fa-pause"></i>
+                        <span>暂停</span>
+                    </button>
+                    <button class="control-btn" onclick="toggleVideoList()">
+                        <i class="fas fa-list"></i>
+                        <span>视频列表</span>
+                    </button>
+                    <button class="control-btn" onclick="fullscreen()">
+                        <i class="fas fa-expand"></i>
+                        <span>全屏</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 观众互动区域 -->
+        <div class="audience-interaction">
+            <button class="interaction-btn" onclick="createHeartRain()">
+                <i class="fas fa-heart"></i>
+            </button>
+            <button class="interaction-btn" onclick="shareVideo()">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let isPlaying = true;
+        let currentVideoIndex = 0;
+        const videoList = [
+            'cunwan1.mp4', 'cunwan2.mp4', 'cunwan3.mp4', 'cunwan4.mp4', 'cunwan5.mp4',
+            'cunwan6.mp4', 'cunwan7.mp4', 'cunwan8.mp4', 'cunwan9.mp4', 'cunwan10.mp4',
+            'cunwan11.mp4', 'cunwan12.mp4', 'cunwan13.mp4', 'cunwan14.mp4', 'cunwan15.mp4',
+            'cunwan16.mp4', 'cunwan17.mp4', 'cunwan18.mp4', 'cunwan19.mp4', 'cunwan20.mp4',
+            'cunwan21.mp4', 'cunwan22.mp4', 'cunwan23.mp4', 'cunwan24.mp4'
+        ];
+        
+        // 视频控制函数
+        function playVideo() {
+            const video = document.getElementById('video');
+            video.play().catch(e => console.log('播放需要用户交互'));
+            isPlaying = true;
+            updateStatus('浏览中');
+        }
+
+        function pauseVideo() {
+            document.getElementById('video').pause();
+            isPlaying = false;
+            updateStatus('已暂停');
+        }
+        
+        // 加载视频
+        function loadVideo(videoSrc) {
+            const video = document.getElementById('video');
+            const source = video.querySelector('source');
+            source.src = videoSrc;
+            video.load();
+            video.play().catch(e => console.log('播放需要用户交互'));
+            isPlaying = true;
+            updateStatus('回看中');
+            
+            // 更新当前视频索引
+            currentVideoIndex = videoList.indexOf(videoSrc);
+            
+            // 隐藏视频列表
+            document.getElementById('video-list').style.display = 'none';
+        }
+        
+        // 自动播放下一视频
+        function playNextVideo() {
+            currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
+            loadVideo(videoList[currentVideoIndex]);
+        }
+        
+        // 切换视频列表显示
+        function toggleVideoList() {
+            const videoList = document.getElementById('video-list');
+            if (videoList.style.display === 'block') {
+                videoList.style.display = 'none';
+            } else {
+                videoList.style.display = 'block';
+            }
+        }
+        
+        // 全屏功能
+        function fullscreen() {
+            const video = document.getElementById('video');
+            if (!document.fullscreenElement) {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+        
+        // 更新状态文本
+        function updateStatus(text) {
+            document.getElementById('status-text').textContent = text;
+        }
+        
+        // 创建烟花效果
+        function createFireworks() {
+            const container = document.getElementById('fireworks-container');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                    firework.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+                    container.appendChild(firework);
+                    
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 2000);
+                }, i * 500);
+            }
+        }
+        
+        // 创建红包雨效果
+        function createRedPackets() {
+            const container = document.getElementById('red-packets-container');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const packet = document.createElement('div');
+                    packet.className = 'red-packet';
+                    packet.style.left = Math.random() * 100 + '%';
+                    packet.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    container.appendChild(packet);
+                    
+                    setTimeout(() => {
+                        packet.remove();
+                    }, 5000);
+                }, i * 800);
+            }
+        }
+        
+        // 发射烟花
+        function launchFireworks() {
+            createFireworks();
+        }
+        
+        // 开始红包雨
+        function startRedPackets() {
+            createRedPackets();
+        }
+        
+        function createHeartRain() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    // 随机大小变化增强效果
+                    heart.style.fontSize = (Math.random() * 40 + 50) + 'px';
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+        
+        // 分享视频
+        function shareVideo() {
+            const video = document.getElementById('video');
+            const currentTime = formatTime(video.currentTime);
+            const duration = formatTime(video.duration);
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '王白眉村百年百人',
+                    text: `正在浏览王白眉村百年百人 ${currentTime}/${duration}`,
+                    url: window.location.href
+                }).catch(error => console.log('分享失败:', error));
+            } else {
+                alert(`分享链接: ${window.location.href}\n当前播放: ${currentTime}/${duration}`);
+            }
+        }
+        
+        // 格式化时间
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // 页面加载时初始化 - 确保视频有声音
+        window.onload = function() {
+            updateStatus('自动播放中');
+            
+            // 初始效果
+            createFireworks();
+            createRedPackets();
+            
+            // 视频事件监听
+            const video = document.getElementById('video');
+            
+            // 确保视频有声音
+            video.muted = false;
+            
+            video.addEventListener('play', () => {
+                updateStatus('浏览中');
+            });
+            
+            // 其他事件监听保持不变...
+            
+            // 自动开始播放
+            video.play().catch(e => {
+                console.log('自动播放被阻止，需要用户交互');
+                updateStatus('点击播放');
+            });
+        };
+    </script>
+</body>
+</html>
