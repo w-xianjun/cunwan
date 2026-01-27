@@ -19,7 +19,6 @@
             height: 100vh;
         }
         
-        /* 直播容器 */
         .live-container {
             position: relative;
             width: 100%;
@@ -27,7 +26,6 @@
             overflow: hidden;
         }
         
-        /* 春节背景 */
         .new-year-bg {
             position: absolute;
             width: 100%;
@@ -39,7 +37,6 @@
             z-index: 1;
         }
         
-        /* 灯笼装饰 */
         .lantern {
             position: absolute;
             width: 40px;
@@ -79,7 +76,6 @@
             100% { transform: rotate(5deg); }
         }
         
-        /* 烟花特效 */
         .firework {
             position: absolute;
             width: 3px;
@@ -106,7 +102,6 @@
             }
         }
         
-        /* 飘落的红包 */
         .red-packet {
             position: absolute;
             width: 30px;
@@ -139,7 +134,6 @@
             }
         }
         
-        /* 直播区域 */
         .live-area {
             position: absolute;
             top: 0;
@@ -151,7 +145,6 @@
             flex-direction: column;
         }
         
-        /* 标题栏 */
         .live-header {
             position: relative;
             padding: 15px 15px;
@@ -194,7 +187,6 @@
             100% { opacity: 1; }
         }
         
-        /* 视频区域 */
         .video-container {
             position: relative;
             overflow: hidden;
@@ -211,11 +203,9 @@
             height: 100%;
             object-fit: cover;
             background: #000;
-            /* 隐藏控制条 */
             -webkit-appearance: none;
         }
         
-        /* 隐藏视频控制条 */
         #video::-webkit-media-controls {
             display: none !important;
         }
@@ -228,7 +218,6 @@
             display: none !important;
         }
         
-        /* 视频控制区域 */
         .video-controls {
             position: absolute;
             bottom: 15px;
@@ -266,7 +255,6 @@
             transform: scale(1.05);
         }
         
-        /* 观众互动区域 */
         .audience-interaction {
             position: absolute;
             bottom: 20px;
@@ -298,10 +286,9 @@
             transform: scale(1.1);
         }
         
-        /* 增大爱心大小 */
         .heart {
             position: absolute;
-            font-size: 30px;  /* 从20px增大到30px */
+            font-size: 30px;
             color: #ff3366;
             pointer-events: none;
             z-index: 100;
@@ -319,7 +306,6 @@
             }
         }
         
-        /* 视频列表 */
         .video-list {
             position: absolute;
             top: 80px;
@@ -348,7 +334,6 @@
             background: rgba(255, 215, 0, 0.4);
         }
         
-        /* 响应式调整 */
         @media (max-width: 360px) {
             .live-title {
                 font-size: 1.8rem;
@@ -390,27 +375,20 @@
 </head>
 <body>
     <div class="live-container">
-        <!-- 背景元素 -->
         <div class="new-year-bg"></div>
         
-        <!-- 灯笼装饰 -->
         <div class="lantern" style="left: 5%; top: 5%;"></div>
         <div class="lantern" style="right: 5%; top: 5%;"></div>
         <div class="lantern" style="left: 10%; top: 20%;"></div>
         <div class="lantern" style="right: 10%; top: 20%;"></div>
         
-        <!-- 烟花特效 -->
         <div id="fireworks-container"></div>
-        
-        <!-- 飘落的红包 -->
         <div id="red-packets-container"></div>
-        
-        <!-- 爱心雨容器 -->
         <div id="hearts-container"></div>
         
-        <!-- 视频列表 -->
         <div class="video-list" id="video-list">
             <h4>视频列表</h4>
+            <!-- 视频列表项保持不变 -->
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan1.mp4')">片断1</div>
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan2.mp4')">片断2</div>
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan3.mp4')">片断3</div>
@@ -435,11 +413,9 @@
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan22.mp4')">片断23</div>
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan23.mp4')">片断24</div>
             <div class="video-item" onclick="loadVideo('https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan24.mp4')">片断24</div>
-       </div>
+        </div>
         
-        <!-- 直播区域 -->
         <div class="live-area">
-            <!-- 标题栏 -->
             <div class="live-header">
                 <div class="live-title">王白眉村百年百人</div>
                 <div class="live-status">
@@ -448,11 +424,9 @@
                 </div>
             </div>
             
-        <div class="live-area">
-            <!-- 视频区域 -->
             <div class="video-container">
-                <!-- 移除muted属性以启用声音 -->
                 <video id="video" autoplay loop>
+                    <!-- 保持原有source标签不变 -->
                     <source src="https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan1.mp4" type="video/mp4">
                     <source src="https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan2.mp4" type="video/mp4">
                     <source src="https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan3.mp4" type="video/mp4">
@@ -480,7 +454,6 @@
                     您的浏览器不支持视频播放
                 </video>
                 
-                <!-- 视频控制区域 -->
                 <div class="video-controls">
                     <button class="control-btn" onclick="playVideo()">
                         <i class="fas fa-play"></i>
@@ -502,7 +475,6 @@
             </div>
         </div>
         
-        <!-- 观众互动区域 -->
         <div class="audience-interaction">
             <button class="interaction-btn" onclick="createHeartRain()">
                 <i class="fas fa-heart"></i>
@@ -514,164 +486,117 @@
     </div>
 
     <script>
-        // 全局变量
-        let isPlaying = true;
-        let currentVideoIndex = 0;
-        const videoList = [
-            'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan1.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan2.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan3.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan4.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan5.mp4',
-            'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan6.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan7.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan8.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan9.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan10.mp4',
-            'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan11.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan12.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan13.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan14.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan15.mp4',
-            'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan16.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan17.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan18.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan19.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan20.mp4',
-            'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan21.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan22.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan23.mp4', 'https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan24.mp4'
-        ];
+        // 优化：使用更简洁的变量定义
+        const videoList = Array.from({length: 24}, (_, i) => 
+            `https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan${i+1}.mp4`
+        );
         
-        // 视频控制函数
-        function playVideo() {
-            const video = document.getElementById('video');
-            video.play().catch(e => console.log('播放需要用户交互'));
+        let currentVideoIndex = 0;
+        let isPlaying = true;
+
+        // 优化：提取公共DOM元素
+        const elements = {
+            video: document.getElementById('video'),
+            statusText: document.getElementById('status-text'),
+            videoList: document.getElementById('video-list'),
+            fireworksContainer: document.getElementById('fireworks-container'),
+            redPacketsContainer: document.getElementById('red-packets-container'),
+            heartsContainer: document.getElementById('hearts-container')
+        };
+
+        // 优化：简化函数定义
+        const playVideo = () => {
+            elements.video.play().catch(e => console.log('播放需要用户交互'));
             isPlaying = true;
             updateStatus('浏览中');
-        }
+        };
 
-        function pauseVideo() {
-            document.getElementById('video').pause();
+        const pauseVideo = () => {
+            elements.video.pause();
             isPlaying = false;
             updateStatus('已暂停');
-        }
-        
-        // 加载视频
-        function loadVideo(videoSrc) {
-            const video = document.getElementById('video');
-            const source = video.querySelector('source');
+        };
+
+        const loadVideo = (videoSrc) => {
+            // 保持原有逻辑，使用第一个source标签
+            const source = elements.video.querySelector('source');
             source.src = videoSrc;
-            video.load();
-            video.play().catch(e => console.log('播放需要用户交互'));
+            elements.video.load();
+            elements.video.play().catch(e => console.log('播放需要用户交互'));
             isPlaying = true;
             updateStatus('回看中');
             
-            // 更新当前视频索引
             currentVideoIndex = videoList.indexOf(videoSrc);
-            
-            // 隐藏视频列表
-            document.getElementById('video-list').style.display = 'none';
-        }
-        
-        // 自动播放下一视频
-        function playNextVideo() {
+            elements.videoList.style.display = 'none';
+        };
+
+        const playNextVideo = () => {
             currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
             loadVideo(videoList[currentVideoIndex]);
-        }
-        
-        // 切换视频列表显示
-        function toggleVideoList() {
-            const videoList = document.getElementById('video-list');
-            if (videoList.style.display === 'block') {
-                videoList.style.display = 'none';
-            } else {
-                videoList.style.display = 'block';
-            }
-        }
-        
-        // 全屏功能
-        function fullscreen() {
-            const video = document.getElementById('video');
+        };
+
+        const toggleVideoList = () => {
+            elements.videoList.style.display = elements.videoList.style.display === 'block' ? 'none' : 'block';
+        };
+
+        const fullscreen = () => {
             if (!document.fullscreenElement) {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
+                const video = elements.video;
+                if (video.requestFullscreen) video.requestFullscreen();
+                else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+                else if (video.msRequestFullscreen) video.msRequestFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
             }
-        }
-        
-        // 更新状态文本
-        function updateStatus(text) {
-            document.getElementById('status-text').textContent = text;
-        }
-        
-        // 创建烟花效果
-        function createFireworks() {
-            const container = document.getElementById('fireworks-container');
-            for (let i = 0; i < 20; i++) {
+        };
+
+        const updateStatus = (text) => {
+            elements.statusText.textContent = text;
+        };
+
+        // 优化：简化特效创建函数
+        const createEffect = (className, count, container, duration, interval, setupFn) => {
+            for (let i = 0; i < count; i++) {
                 setTimeout(() => {
-                    const firework = document.createElement('div');
-                    firework.className = 'firework';
-                    firework.style.left = Math.random() * 100 + '%';
-                    firework.style.top = Math.random() * 100 + '%';
-                    firework.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
-                    firework.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
-                    container.appendChild(firework);
-                    
-                    setTimeout(() => {
-                        firework.remove();
-                    }, 2000);
-                }, i * 500);
+                    const element = document.createElement('div');
+                    element.className = className;
+                    if (setupFn) setupFn(element, i);
+                    container.appendChild(element);
+                    setTimeout(() => element.remove(), duration);
+                }, i * interval);
             }
-        }
-        
-        // 创建红包雨效果
-        function createRedPackets() {
-            const container = document.getElementById('red-packets-container');
-            for (let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    const packet = document.createElement('div');
-                    packet.className = 'red-packet';
-                    packet.style.left = Math.random() * 100 + '%';
-                    packet.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    container.appendChild(packet);
-                    
-                    setTimeout(() => {
-                        packet.remove();
-                    }, 5000);
-                }, i * 800);
-            }
-        }
-        
-        // 发射烟花
-        function launchFireworks() {
-            createFireworks();
-        }
-        
-        // 开始红包雨
-        function startRedPackets() {
-            createRedPackets();
-        }
-        
-        function createHeartRain() {
-            const container = document.getElementById('hearts-container');
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.innerHTML = '❤';
-                    heart.style.left = Math.random() * 100 + '%';
-                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    // 随机大小变化增强效果
-                    heart.style.fontSize = (Math.random() * 40 + 50) + 'px';
-                    container.appendChild(heart);
-                    
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 3000);
-                }, i * 100);
-            }
-        }
-        
-        // 分享视频
-        function shareVideo() {
-            const video = document.getElementById('video');
-            const currentTime = formatTime(video.currentTime);
-            const duration = formatTime(video.duration);
+        };
+
+        const createFireworks = () => {
+            createEffect('firework', 20, elements.fireworksContainer, 2000, 500, (element) => {
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                element.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+            });
+        };
+
+        const createRedPackets = () => {
+            createEffect('red-packet', 15, elements.redPacketsContainer, 5000, 800, (element) => {
+                element.style.left = Math.random() * 100 + '%';
+                element.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            });
+        };
+
+        const createHeartRain = () => {
+            createEffect('heart', 30, elements.heartsContainer, 3000, 100, (element) => {
+                element.innerHTML = '❤';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                element.style.fontSize = (Math.random() * 40 + 50) + 'px';
+            });
+        };
+
+        const shareVideo = () => {
+            const currentTime = formatTime(elements.video.currentTime);
+            const duration = formatTime(elements.video.duration);
             
             if (navigator.share) {
                 navigator.share({
@@ -682,17 +607,16 @@
             } else {
                 alert(`分享链接: ${window.location.href}\n当前播放: ${currentTime}/${duration}`);
             }
-        }
-        
-        // 格式化时间
-        function formatTime(seconds) {
+        };
+
+        const formatTime = (seconds) => {
             if (isNaN(seconds)) return '00:00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        // 页面加载时初始化 - 确保视频有声音
+        };
+
+        // 页面初始化
         window.onload = function() {
             updateStatus('自动播放中');
             
@@ -700,24 +624,22 @@
             createFireworks();
             createRedPackets();
             
-            // 视频事件监听
-            const video = document.getElementById('video');
-            
             // 确保视频有声音
-            video.muted = false;
+            elements.video.muted = false;
             
-            video.addEventListener('play', () => {
-                updateStatus('浏览中');
-            });
-            
-            // 其他事件监听保持不变...
+            // 事件监听
+            elements.video.addEventListener('play', () => updateStatus('浏览中'));
             
             // 自动开始播放
-            video.play().catch(e => {
+            elements.video.play().catch(e => {
                 console.log('自动播放被阻止，需要用户交互');
                 updateStatus('点击播放');
             });
         };
+
+        // 保持原有函数名兼容性
+        const launchFireworks = createFireworks;
+        const startRedPackets = createRedPackets;
     </script>
 </body>
 </html>
