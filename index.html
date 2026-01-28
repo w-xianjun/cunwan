@@ -29,7 +29,6 @@
             z-index: 1;
         }
         
-        /* 重构开场文字容器，支持多行不同样式 */
         .center-text {
             position: absolute;
             top: 50%;
@@ -43,19 +42,17 @@
             text-shadow: 0 0 20px rgba(0,0,0,0.8);
         }
         
-        /* 主标题样式 */
         .main-title {
             font-size: 5em;
             font-weight: bold;
-            margin-bottom: 40px; /* 与策划文字的间距 */
+            margin-bottom: 40px;
             line-height: 1.2;
         }
         
-        /* 策划文字样式（小字、单独一行） */
         .planner-text {
-            font-size: 2em; /* 小字，比主标题小 */
-            font-weight: normal; /* 取消加粗 */
-            opacity: 0.9; /* 稍淡，突出主标题 */
+            font-size: 2em;
+            font-weight: normal;
+            opacity: 0.9;
         }
         
         .program-list {
@@ -174,17 +171,169 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        
+        .announcement-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 25;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: auto;
+        }
+        
+        .announcement-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .announcement-title {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .announcement-subtitle {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .announcement-duration {
+            font-size: 1.5em;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+        
+        .announcement-countdown {
+            font-size: 1.2em;
+            color: #ff6b6b;
+            margin-top: 20px;
+        }
+        
+        .announcement-skip {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .announcement-skip:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .voice-control {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            background: rgba(212, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 15;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .voice-control:hover {
+            background: rgba(212, 0, 0, 0.9);
+        }
+        
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #00ff00;
+            padding: 5px 10px;
+            font-size: 12px;
+            z-index: 100;
+            display: none;
+        }
+
+        .start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+            color: white;
+            text-align: center;
+        }
+        
+        .start-btn {
+            background: #d40000;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <div class="debug-info" id="debug-info"></div>
+    
+    <!-- 开始屏幕 -->
+    <div class="start-screen" id="start-screen">
+        <div class="main-title">
+            2026网络资源春节联欢<br>
+            除夕夜 · 线上预录播放
+        </div>
+        <div class="planner-text"><br><br><br>策划：先军</div>
+        <button class="start-btn" id="start-btn">点击开始播放</button>
+    </div>
+    
+    <button class="voice-control" id="voice-toggle">
+        <span id="voice-icon">🔊</span> 语音报幕
+    </button>
+    
     <div class="video-container" id="video-container">
-        <!-- 重构开场文字结构，分离主标题和策划文字 -->
         <div class="center-text" id="center-text">
             <div class="main-title">
                 2026网络资源春节联欢<br>
                 除夕夜 · 线上预录播放
             </div>
-            <div class="planner-text">策划：先军</div>
+            <div class="planner-text"><br><br><br>策划：先军</div>
+        </div>
+        
+        <div class="announcement-overlay" id="announcement-overlay">
+            <div class="announcement-title" id="announcement-title">节目名称</div>
+            <div class="announcement-subtitle" id="announcement-subtitle">节目副标题</div>
+            <div class="announcement-duration" id="announcement-duration">时长：0分钟</div>
+            <div class="announcement-countdown" id="announcement-countdown">即将开始播放...</div>
+            <div class="announcement-skip" id="announcement-skip">跳过报幕 (3)</div>
         </div>
     </div>
 
@@ -273,7 +422,7 @@
     </div>
 
     <script>
-        // 使用可公开访问的测试视频源（替换为您自己的视频URL）
+        // 使用可公开访问的测试视频源
         const videoSources = [
             "", // 0索引占位
             "https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan1.mp4",
@@ -293,28 +442,68 @@
             "https://raw.githubusercontent.com/w-xianjun/cunwan/main/images/cunwan15.mp4" 
         ];
 
+        // 节目报幕信息
+        const programAnnouncements = [
+            {}, // 0索引占位
+            {title: "开场锣鼓", subtitle: "【春鼓迎新】", duration: "8分钟", voiceText: "第一个节目，开场锣鼓，时长8分钟。"},
+            {title: "童声合唱《村谣》", subtitle: "【春鼓迎新】", duration: "6分钟", voiceText: "第二个节目，童声合唱《村谣》，时长6分钟。"},
+            {title: "广场舞《欢天喜地过大年》", subtitle: "【春鼓迎新】", duration: "8分钟", voiceText: "第三个节目，广场舞《欢天喜地过大年》，时长8分钟。"},
+            {title: "青阳腔《贵妃醉酒》", subtitle: "【古韵乡情】", duration: "10分钟", voiceText: "第四个节目，青阳腔《贵妃醉酒》，时长10分钟。"},
+            {title: "黄梅戏《夫妻双双把家还》", subtitle: "【古韵乡情】", duration: "8分钟", voiceText: "第五个节目，黄梅戏《夫妻双双把家还》，时长8分钟。"},
+            {title: "器乐《映山红》", subtitle: "【古韵乡情】", duration: "7分钟", voiceText: "第六个节目，器乐《映山红》，时长7分钟。"},
+            {title: "影像集锦《百年百人片段》", subtitle: "【烟火人间】", duration: "12分钟", voiceText: "第七个节目，影像集锦《百年百人片段》，时长12分钟。"},
+            {title: "小品《乡村邻里情》", subtitle: "【烟火人间】", duration: "15分钟", voiceText: "第八个节目，小品《乡村邻里情》，时长15分钟。"},
+            {title: "歌曲《咱老百姓》", subtitle: "【烟火人间】", duration: "6分钟", voiceText: "第九个节目，歌曲《咱老百姓》，时长6分钟。"},
+            {title: "花式篮球表演", subtitle: "【青春中国】", duration: "8分钟", voiceText: "第十个节目，花式篮球表演，时长8分钟。"},
+            {title: "爵士舞《青春节拍》", subtitle: "【青春中国】", duration: "6分钟", voiceText: "第十一个节目，爵士舞《青春节拍》，时长6分钟。"},
+            {title: "歌曲《故乡的云》", subtitle: "【青春中国】", duration: "6分钟", voiceText: "第十二个节目，歌曲《故乡的云》，时长6分钟。"},
+            {title: "独唱《我的中国心》", subtitle: "【青春中国】", duration: "5分钟", voiceText: "第十三个节目，独唱《我的中国心》，时长5分钟。"},
+            {title: "合唱《在希望的田野上》", subtitle: "【尾声·田野春望】", duration: "5分钟", voiceText: "第十四个节目，合唱《在希望的田野上》，时长5分钟。"},
+            {title: "合唱《难忘今宵》", subtitle: "【尾声·田野春望】", duration: "5分钟", voiceText: "第十五个节目，合唱《难忘今宵》，时长5分钟。"}
+        ];
+
         let currentProgram = 0;
         let isListVisible = false;
         let videoElement = null;
+        let isVoiceEnabled = true;
+        let countdownInterval = null;
+        let countdownSeconds = 3;
+        let videoEndedHandler = null;
+        let userInteracted = false;
+        let isAutoPlaying = false;
+        let isSpeaking = false; 
+
+        // 调试功能
+        function debug(msg) {
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.textContent = msg;
+            debugInfo.style.display = 'block';
+            console.log(msg);
+        }
 
         window.onload = function() {
-            // 添加用户交互事件监听，提高自动播放成功率
-            document.addEventListener('click', handleUserInteraction);
-            document.addEventListener('touchstart', handleUserInteraction);
+            debug('页面加载完成');
             
-            setTimeout(() => {
-                hideCenterText();
-                // 文字隐藏后自动播放第一个节目
-                setTimeout(() => {
-                    playVideo(1);
-                }, 1000); // 等待文字过渡动画完成（1秒）
-            }, 10000); // 开场文字显示10秒后隐藏
+            // 显示开始屏幕
+            document.getElementById('start-screen').style.display = 'flex';
+            
+            // 开始按钮事件
+            document.getElementById('start-btn').addEventListener('click', function() {
+                userInteracted = true;
+                document.getElementById('start-screen').style.display = 'none';
+                startPlaybackSequence();
+            });
+            
+            document.getElementById('voice-toggle').addEventListener('click', toggleVoice);
+            document.getElementById('toggle-list').addEventListener('click', toggleProgramList);
         };
 
-        function handleUserInteraction() {
-            // 用户交互后，移除事件监听
-            document.removeEventListener('click', handleUserInteraction);
-            document.removeEventListener('touchstart', handleUserInteraction);
+        function startPlaybackSequence() {
+            debug('用户点击开始，启动播放序列');
+            hideCenterText();
+            setTimeout(() => {
+                playVideo(1);
+            }, 1000);
         }
 
         function hideCenterText() {
@@ -322,26 +511,152 @@
         }
 
         function playVideo(index) {
-            // 更新当前节目样式
-            if (currentProgram > 0) {
-                document.querySelectorAll('.program-item')[currentProgram-1].classList.remove('current-program');
+            debug(`开始播放节目 ${index}`);
+            
+            // 清理之前的倒计时和语音
+            if (countdownInterval) clearInterval(countdownInterval);
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
             }
-            document.querySelectorAll('.program-item')[index-1].classList.add('current-program');
+            isSpeaking = false;
+            
+            // 更新节目样式
+            if (currentProgram > 0) {
+                const prevItem = document.querySelectorAll('.program-item')[currentProgram-1];
+                if (prevItem) prevItem.classList.remove('current-program');
+            }
+            const currentItem = document.querySelectorAll('.program-item')[index-1];
+            if (currentItem) currentItem.classList.add('current-program');
             currentProgram = index;
 
-            // 创建视频播放器
+            showAnnouncement(index);
+        }
+
+        function showAnnouncement(index) {
+            const announcement = programAnnouncements[index];
+            const overlay = document.getElementById('announcement-overlay');
+            const title = document.getElementById('announcement-title');
+            const subtitle = document.getElementById('announcement-subtitle');
+            const duration = document.getElementById('announcement-duration');
+            const countdown = document.getElementById('announcement-countdown');
+            const skipBtn = document.getElementById('announcement-skip');
+            
+            // 重置报幕UI
+            title.textContent = announcement.title;
+            subtitle.textContent = announcement.subtitle;
+            duration.textContent = `时长：${announcement.duration}`;
+            countdown.textContent = "即将开始播放...";
+            skipBtn.textContent = `跳过报幕 (${countdownSeconds})`;
+            
+            // 显示报幕层
+            overlay.classList.add('active');
+            
+            // 语音播报逻辑：确保语音播完后再处理倒计时
+            if (isVoiceEnabled) {
+                speakAnnouncement(announcement.voiceText, () => {
+                    // 语音播报完成后的回调
+                    isSpeaking = false;
+                    debug('语音播报完成，开始倒计时');
+                    startCountdown(index);
+                });
+            } else {
+                // 未开启语音，直接开始倒计时
+                startCountdown(index);
+            }
+            
+            // 跳过按钮逻辑
+            skipBtn.onclick = function() {
+                clearInterval(countdownInterval);
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                }
+                isSpeaking = false;
+                startVideoPlayback(currentProgram);
+            };
+        }
+
+        // 独立的倒计时函数
+        function startCountdown(index) {
+            let secondsLeft = countdownSeconds;
+            const skipBtn = document.getElementById('announcement-skip');
+            const countdown = document.getElementById('announcement-countdown');
+            
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                skipBtn.textContent = `跳过报幕 (${secondsLeft})`;
+                countdown.textContent = `即将播放：${secondsLeft}秒`;
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    startVideoPlayback(index);
+                }
+            }, 1000);
+        }
+
+        // 优化语音播报函数，增加完成回调
+        function speakAnnouncement(text, onComplete) {
+            isSpeaking = true;
+            if ('speechSynthesis' in window) {
+                // 确保语音合成可用
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 1.0;
+                utterance.volume = 1.0;
+                
+                // 语音播报错误处理
+                utterance.onerror = function(event) {
+                    debug('语音播报错误: ' + event.error);
+                    isSpeaking = false;
+                    onComplete && onComplete();
+                };
+                
+                // 语音播报完成回调
+                utterance.onend = function() {
+                    debug('语音播报结束');
+                    isSpeaking = false;
+                    onComplete && onComplete();
+                };
+                
+                speechSynthesis.speak(utterance);
+                debug('开始语音播报: ' + text);
+            } else {
+                debug('浏览器不支持语音合成');
+                isSpeaking = false;
+                onComplete && onComplete();
+            }
+        }
+
+        function startVideoPlayback(index) {
+            debug(`开始视频播放: 节目 ${index}`);
+            
+            // 隐藏报幕层
+            const overlay = document.getElementById('announcement-overlay');
+            overlay.classList.remove('active');
+            
             const videoContainer = document.getElementById('video-container');
+            // 保留报幕层DOM，避免被清空
             videoContainer.innerHTML = `
-                <video id="main-video" controls style="width:100%;height:100%;">
+                <video id="main-video" controls style="width:100%;height:100%;" playsinline>
                     <source src="${videoSources[index]}" type="video/mp4">
                     您的浏览器不支持视频播放
                 </video>
                 <div class="autoplay-overlay" id="autoplay-overlay" style="display: none;">
-                    <h3>点击按钮开始播放</h3>
-                    <button class="autoplay-btn" onclick="startPlayback()">开始播放</button>
+                    <h3>视频已准备就绪</h3>
+                    <button class="autoplay-btn" onclick="forcePlayVideo()">开始播放</button>
                 </div>
                 <div class="error-message" id="error-message" style="display:none;">
                     视频加载失败，请检查网络连接或视频源
+                </div>
+                <div class="announcement-overlay" id="announcement-overlay">
+                    <div class="announcement-title" id="announcement-title">节目名称</div>
+                    <div class="announcement-subtitle" id="announcement-subtitle">节目副标题</div>
+                    <div class="announcement-duration" id="announcement-duration">时长：0分钟</div>
+                    <div class="announcement-countdown" id="announcement-countdown">即将开始播放...</div>
+                    <div class="announcement-skip" id="announcement-skip">跳过报幕 (3)</div>
                 </div>
             `;
             
@@ -349,74 +664,165 @@
             const errorMessage = document.getElementById('error-message');
             const autoplayOverlay = document.getElementById('autoplay-overlay');
             
-            // 添加错误处理
+            // 先移除旧的ended事件监听（如果存在）
+            if (videoEndedHandler && typeof videoEndedHandler === 'function') {
+                document.getElementById('main-video')?.removeEventListener('ended', videoEndedHandler);
+            }
+            
+            // 重新定义视频结束处理函数（核心修复：确保事件正确绑定）
+            videoEndedHandler = function() {
+                debug(`节目 ${index} 播放结束`);
+                // 立即清理当前视频资源
+                videoElement.pause();
+                videoElement.removeAttribute('src');
+                videoElement.load();
+                
+                if (index < videoSources.length - 1) {
+                    debug(`准备播放下一个节目: ${index + 1}`);
+                    // 缩短延迟，避免时序丢失
+                    setTimeout(() => {
+                        playVideo(index + 1);
+                    }, 300);
+                } else {
+                    debug('所有节目播放完毕');
+                    videoContainer.innerHTML = `
+                        <div class="center-text">
+                            <div class="main-title">2026网络资源春节联欢<br>播放完毕！</div>
+                            <div class="planner-text">感谢观看</div>
+                        </div>
+                    `;
+                }
+            };
+            
+            // 立即绑定ended事件（核心修复）
+            videoElement.addEventListener('ended', videoEndedHandler);
+            
+            // 视频加载错误处理
             videoElement.addEventListener('error', function(e) {
-                console.error('视频加载错误:', e);
+                debug(`视频加载错误: ${e}`);
                 errorMessage.style.display = 'block';
                 videoElement.style.display = 'none';
                 autoplayOverlay.style.display = 'none';
-            });
-            
-            videoElement.addEventListener('loadeddata', function() {
-                errorMessage.style.display = 'none';
-                // 尝试自动播放
-                attemptAutoplay();
-            });
-
-            // 监听视频播放结束事件，自动切换下一个节目
-            videoElement.addEventListener('ended', function() {
-                if (currentProgram < videoSources.length - 1) {
-                    playVideo(currentProgram + 1);
-                } else {
-                    // 最后一个节目播放完
-                    alert('2026网络资源春节联欢播放完毕！');
+                
+                // 如果视频加载失败，尝试播放下一个节目
+                if (index < videoSources.length - 1) {
+                    setTimeout(() => {
+                        debug(`视频加载失败，尝试播放下一个节目: ${index + 1}`);
+                        playVideo(index + 1);
+                    }, 2000);
                 }
             });
             
-            // 自动隐藏节目单
-            if (isListVisible) {
-                toggleProgramList();
-            }
+            // 视频加载完成处理
+            videoElement.addEventListener('loadeddata', function() {
+                debug('视频数据加载完成');
+                errorMessage.style.display = 'none';
+                attemptAutoplay();
+            });
+
+            // 视频可播放处理
+            videoElement.addEventListener('canplay', function() {
+                debug('视频可以播放');
+                if (!isAutoPlaying) {
+                    attemptAutoplay();
+                }
+            });
+
+            // 播放进度调试
+            videoElement.addEventListener('timeupdate', function() {
+                if (videoElement.duration > 0) {
+                    const progress = (videoElement.currentTime / videoElement.duration * 100).toFixed(1);
+                    debug(`播放进度: ${progress}%`);
+                }
+            });
+            
+            // 隐藏节目单（如果显示）
+            if (isListVisible) toggleProgramList();
         }
 
+        // 强制播放视频（处理自动播放被阻止的情况）
+        function forcePlayVideo() {
+            const autoplayOverlay = document.getElementById('autoplay-overlay');
+            // 强制标记用户已交互
+            userInteracted = true;
+            videoElement.muted = false;
+            videoElement.play().then(() => {
+                debug('手动播放成功');
+                autoplayOverlay.style.display = 'none';
+                isAutoPlaying = true;
+            }).catch(error => {
+                debug('手动播放失败: ' + error);
+                // 兜底：即使手动播放失败，也标记为已交互
+                userInteracted = true;
+            });
+        }
+
+        // 优化自动播放逻辑（核心修复：确保静音自动播放稳定）
         function attemptAutoplay() {
             const autoplayOverlay = document.getElementById('autoplay-overlay');
             
-            // 尝试自动播放
+            // 强制静音，确保所有浏览器都能自动播放
+            videoElement.muted = true;
+            isAutoPlaying = false;
+            
+            // 先暂停再播放，避免播放状态异常
+            videoElement.pause();
             const playPromise = videoElement.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // 自动播放成功，隐藏覆盖层
+                    debug('视频自动播放成功');
                     autoplayOverlay.style.display = 'none';
+                    isAutoPlaying = true;
+                    
+                    // 用户已交互时，延迟取消静音（增加稳定性）
+                    if (userInteracted) {
+                        setTimeout(() => {
+                            try {
+                                videoElement.muted = false;
+                                debug('取消视频静音成功');
+                            } catch (e) {
+                                debug('取消静音失败: ' + e);
+                            }
+                        }, 500);
+                    }
                 }).catch(error => {
-                    // 自动播放被阻止，显示覆盖层
-                    console.log('自动播放被阻止，需要用户交互');
+                    debug('自动播放被阻止: ' + error);
                     autoplayOverlay.style.display = 'flex';
+                    isAutoPlaying = false;
                 });
+            } else {
+                // 兼容旧浏览器
+                if (videoElement.play) {
+                    videoElement.play();
+                    autoplayOverlay.style.display = 'none';
+                    isAutoPlaying = true;
+                } else {
+                    autoplayOverlay.style.display = 'flex';
+                }
             }
         }
 
-        function startPlayback() {
-            const autoplayOverlay = document.getElementById('autoplay-overlay');
-            videoElement.play().then(() => {
-                autoplayOverlay.style.display = 'none';
-            }).catch(error => {
-                console.error('播放失败:', error);
-            });
+        // 切换语音播报状态
+        function toggleVoice() {
+            isVoiceEnabled = !isVoiceEnabled;
+            const voiceIcon = document.getElementById('voice-icon');
+            voiceIcon.textContent = isVoiceEnabled ? '🔊' : '🔇';
+            if (!isVoiceEnabled && 'speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                isSpeaking = false;
+            }
+            debug(`语音播报${isVoiceEnabled ? '开启' : '关闭'}`);
         }
 
+        // 切换节目单显示状态
         function toggleProgramList() {
             const programList = document.getElementById('program-list');
             const toggleBtn = document.getElementById('toggle-list');
-            
             isListVisible = !isListVisible;
             programList.classList.toggle('visible');
             toggleBtn.textContent = isListVisible ? '隐藏节目单' : '显示节目单';
         }
-
-        // 绑定节目单切换按钮事件
-        document.getElementById('toggle-list').addEventListener('click', toggleProgramList);
     </script>
 </body>
 </html>
